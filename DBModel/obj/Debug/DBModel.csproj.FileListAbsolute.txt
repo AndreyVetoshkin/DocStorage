@@ -1,0 +1,16 @@
+D:\work\DocStorage\DBModel\obj\Debug\DBModel.csprojResolveAssemblyReference.cache
+D:\work\DocStorage\DBModel\bin\Debug\AppData\DBDocs.mdf
+D:\work\DocStorage\DBModel\bin\Debug\AppData\DBDocs_log.ldf
+D:\work\DocStorage\DBModel\bin\Debug\DBModel.dll
+D:\work\DocStorage\DBModel\bin\Debug\DBModel.pdb
+D:\work\DocStorage\DBModel\bin\Debug\FluentNHibernate.dll
+D:\work\DocStorage\DBModel\bin\Debug\Iesi.Collections.dll
+D:\work\DocStorage\DBModel\bin\Debug\NHibernate.dll
+D:\work\DocStorage\DBModel\bin\Debug\Services.dll
+D:\work\DocStorage\DBModel\bin\Debug\Services.pdb
+D:\work\DocStorage\DBModel\bin\Debug\FluentNHibernate.pdb
+D:\work\DocStorage\DBModel\bin\Debug\FluentNHibernate.xml
+D:\work\DocStorage\DBModel\bin\Debug\Iesi.Collections.xml
+D:\work\DocStorage\DBModel\bin\Debug\NHibernate.xml
+D:\work\DocStorage\DBModel\obj\Debug\DBModel.dll
+D:\work\DocStorage\DBModel\obj\Debug\DBModel.pdb

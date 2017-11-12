@@ -1,0 +1,5 @@
+D:\work\DocStorage\Services\bin\Debug\Services.dll
+D:\work\DocStorage\Services\bin\Debug\Services.pdb
+D:\work\DocStorage\Services\obj\Debug\Services.csprojResolveAssemblyReference.cache
+D:\work\DocStorage\Services\obj\Debug\Services.dll
+D:\work\DocStorage\Services\obj\Debug\Services.pdb

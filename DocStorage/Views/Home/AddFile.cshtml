@@ -1,0 +1,60 @@
+﻿@model Doc
+@using DBModel.Models
+
+@{
+    ViewBag.Title = "Добавление файлов";
+}
+
+<h2>Мои файлы</h2>
+
+@using (Html.BeginForm("AddFile", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            <input type="file" id="file" name="file" />
+            @Html.ValidationMessageFor(m => m.FileName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Добавить" class="btn btn-default" />
+        </div>
+    </div>
+}
+<br />
+<div id="results">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileName)
+            </th>
+            <th></th>
+        </tr>
+        
+        @foreach (Doc item in ViewBag.Docs)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Date</td>
+                <td>@item.Author</td>
+                <td>@item.FileName</td>
+                <td>
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+                </td>
+
+            </tr>
+        }
+    </table>
+</div>
