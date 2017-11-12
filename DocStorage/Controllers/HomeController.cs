@@ -1,8 +1,10 @@
 ﻿using DBModel.Models;
+using DocStorage.Models;
 using Services.Entities;
 using Services.Managers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -21,10 +23,39 @@ namespace DocStorage.Controllers
             this.docManager = docManager;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "Date desc" : "Date";
+            ViewBag.OwnerSortParm = sortOrder == "Owner" ? "Owner desc" : "Owner";
+
             var docs = docManager.GetAll();
-            ViewBag.Docs = docs;
+            IOrderedEnumerable<IDoc> sortedDocs;
+
+            switch (sortOrder)
+            {
+                case "Name desc":
+                    sortedDocs = docs.OrderByDescending(d => d.Name);
+                    break;
+                case "Date":
+                    sortedDocs = docs.OrderBy(d => d.Date);
+                    break;
+                case "Date desc":
+                    sortedDocs = docs.OrderByDescending(d => d.Date);
+                    break;
+                case "Owner":
+                    sortedDocs = docs.OrderBy(d => d.Author);
+                    break;
+                case "Owner desc":
+                    sortedDocs = docs.OrderByDescending(d => d.Author);
+                    break;
+                default:
+                    sortedDocs = docs.OrderBy(d => d.Name);
+                    break;
+            }
+
+            //ViewBag.Docs = docs;
+            ViewBag.SortedDocs = sortedDocs;
             return View();
         }
 
@@ -67,19 +98,24 @@ namespace DocStorage.Controllers
                 DateTime current = DateTime.Now;
                 if (file != null)
                 {
-                    doc.Name = file.FileName.Substring(0, file.FileName.LastIndexOf('.'));
-                    // Получаем расширение
-                    string ext = file.FileName.Substring(file.FileName.LastIndexOf('.'));
-                    // сохраняем файл по определенному пути на сервере
-                    string path = current.ToString("dd/MM/yyyy H:mm:ss").Replace(":", "_").Replace("/", ".") + ext;
-                    file.SaveAs(Server.MapPath("~/Files/" + path));
-                    doc.FileName = path;
-                    doc.Date = current;
-                    doc.Author = user.Login;
-                    doc.User = user as User;
-                    docManager.Save(doc);
+                    if (file.FileName.Substring(0, file.FileName.LastIndexOf('.')).Length <= 50)
+                    {
+                        doc.Name = file.FileName.Substring(0, file.FileName.LastIndexOf('.'));
+                        // Получаем расширение
+                        string ext = file.FileName.Substring(file.FileName.LastIndexOf('.'));
+                        // сохраняем файл по определенному пути на сервере
+                        string path = current.ToString("dd/MM/yyyy H:mm:ss").Replace(":", "_").Replace("/", ".") + ext;
+                        file.SaveAs(Server.MapPath("~/Files/" + path));
+                        doc.FileName = path;
+                        doc.Date = current;
+                        doc.Author = user.Login;
+                        doc.User = user as User;
+                        docManager.Save(doc);
+                    }
+                    else
+                    { ModelState.AddModelError("", "Слишком длинное имя файла"); }
                 }
-            }
+            }         
             var docs = docManager.GetAll().Where(d => d.Author == user.Login);
             ViewBag.Docs = docs;
             return View(doc);
@@ -107,7 +143,6 @@ namespace DocStorage.Controllers
             {
                 string filename = Server.MapPath("~/Files/" + doc.FileName);
                 string contentType = "application/msword";
-
                 string ext = filename.Substring(filename.LastIndexOf('.'));
                 switch (ext)
                 {
@@ -134,7 +169,7 @@ namespace DocStorage.Controllers
         public ActionResult Search(string name)
         {
             IList<IDoc> docs;
-            docs = docManager.GetAll().Where(d=>d.Name.Contains(name)).ToList();
+            docs = docManager.GetAll().Where(d => d.Name.Contains(name)).ToList();
             if (docs.Count <= 0)
             {
                 docs = docManager.GetAll().ToList();

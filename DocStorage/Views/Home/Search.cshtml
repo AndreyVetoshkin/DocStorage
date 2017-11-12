@@ -41,7 +41,9 @@
                 @Html.DisplayFor(modelItem => item.FileName)
             </td>
             <td>
-                @Html.ActionLink("Загрузить", "Download", new { id = item.Id }) |
+                <a href="@Url.Action("Download", new { id = item.Id }) ">
+                    <img src="~/Content/pics/folder_open.png" alt="Открыть" style="width:25px; height:25px" />
+                </a> |
                 @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
             </td>
         </tr>

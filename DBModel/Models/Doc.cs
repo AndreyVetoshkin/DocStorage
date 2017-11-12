@@ -20,6 +20,7 @@ namespace DBModel.Models
         [Display(Name = "Хозяин")]
         public virtual string Author { get; set; }
         [Display(Name = "Имя на сервере")]
+        [StringLength(50, ErrorMessage = "Имя файла слишком длинное")]
         public virtual string FileName { get; set; }
 
         public virtual User User { get; set; }
