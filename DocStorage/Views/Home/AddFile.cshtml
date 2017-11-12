@@ -42,11 +42,19 @@
             </th>
             <th></th>
         </tr>
-        
+
         @foreach (Doc item in ViewBag.Docs)
         {
+            string name;
             <tr>
-                <td>@item.Name</td>
+                <td>
+                    @if (item.Name.Length > 30)
+                    {
+                        name = item.Name.Substring(0, 29) + "...";
+                    }
+                    else { name = item.Name; }
+                    @name
+                </td>
                 <td>@item.Date</td>
                 <td>@item.Author</td>
                 <td>@item.FileName</td>

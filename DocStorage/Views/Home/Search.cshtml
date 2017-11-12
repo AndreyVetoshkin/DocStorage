@@ -21,9 +21,15 @@
 
     @foreach (var item in Model)
     {
+        string name;
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @if (item.Name.Length > 30)
+                {
+                    name = item.Name.Substring(0, 29) + "...";
+                }
+                else { name = item.Name; }
+                @name
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)

@@ -13,7 +13,7 @@ namespace DBModel.Models
     {
         public virtual long Id { get; set; }
         [Display(Name = "Имя файла")]
-
+        [StringLength(50,ErrorMessage ="Имя файла слишком длинное")]
         public virtual string Name { get; set; }
         [Display(Name = "Дата создания")]
         public virtual DateTime Date { get; set; }

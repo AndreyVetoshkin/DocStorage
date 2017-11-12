@@ -62,24 +62,24 @@ namespace DocStorage.Controllers
             {
                 return RedirectToAction("LogOff", "Account");
             }
-            if (!ModelState.IsValid)
-                return View(doc);
-            DateTime current = DateTime.Now;
-            if (file != null)
+            if (ModelState.IsValid)
             {
-                doc.Name = file.FileName.Substring(0, file.FileName.LastIndexOf('.'));
-                // Получаем расширение
-                string ext = file.FileName.Substring(file.FileName.LastIndexOf('.'));
-                // сохраняем файл по определенному пути на сервере
-                string path = current.ToString("dd/MM/yyyy H:mm:ss").Replace(":", "_").Replace("/", ".") + ext;
-                file.SaveAs(Server.MapPath("~/Files/" + path));
-                doc.FileName = path;
-                doc.Date = current;
-                doc.Author = user.Login;
-                doc.User = user as User;
-                docManager.Save(doc);
+                DateTime current = DateTime.Now;
+                if (file != null)
+                {
+                    doc.Name = file.FileName.Substring(0, file.FileName.LastIndexOf('.'));
+                    // Получаем расширение
+                    string ext = file.FileName.Substring(file.FileName.LastIndexOf('.'));
+                    // сохраняем файл по определенному пути на сервере
+                    string path = current.ToString("dd/MM/yyyy H:mm:ss").Replace(":", "_").Replace("/", ".") + ext;
+                    file.SaveAs(Server.MapPath("~/Files/" + path));
+                    doc.FileName = path;
+                    doc.Date = current;
+                    doc.Author = user.Login;
+                    doc.User = user as User;
+                    docManager.Save(doc);
+                }
             }
-
             var docs = docManager.GetAll().Where(d => d.Author == user.Login);
             ViewBag.Docs = docs;
             return View(doc);
