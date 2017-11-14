@@ -1,10 +1,9 @@
 ﻿using DBModel.Models;
-using DocStorage.Models;
 using Services.Entities;
 using Services.Managers;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -54,7 +53,6 @@ namespace DocStorage.Controllers
                     break;
             }
 
-            //ViewBag.Docs = docs;
             ViewBag.SortedDocs = sortedDocs;
             return View();
         }
@@ -115,7 +113,7 @@ namespace DocStorage.Controllers
                     else
                     { ModelState.AddModelError("", "Слишком длинное имя файла"); }
                 }
-            }         
+            }
             var docs = docManager.GetAll().Where(d => d.Author == user.Login);
             ViewBag.Docs = docs;
             return View(doc);
@@ -166,14 +164,54 @@ namespace DocStorage.Controllers
         }
 
         [HttpPost]
-        public ActionResult Search(string name)
+        public ActionResult Search(string searchParam, string url, string searchOptions)
         {
-            IList<IDoc> docs;
-            docs = docManager.GetAll().Where(d => d.Name.Contains(name)).ToList();
-            if (docs.Count <= 0)
+            IList<IDoc> docs = null;
+            string _Action = url.Substring(url.LastIndexOf("/"));
+            string user = HttpContext.User.Identity.Name;
+            switch (searchOptions)
             {
-                docs = docManager.GetAll().ToList();
-                return PartialView(docs);
+                case "По имени":
+
+
+                    switch (_Action)
+                    {
+                        default:
+                            docs = docManager.GetList(searchParam);
+                            break;
+                        case "/AddFile":                           
+                            docs = docManager.GetList(searchParam).Where(d => d.Author == user).ToList();
+                            break;
+                    }
+                    break;
+                case "По дате":
+                    DateTime searchDate;
+                    CultureInfo culture = CultureInfo.CurrentCulture;
+                    DateTimeStyles styles = DateTimeStyles.None;
+                    switch (_Action)
+                    {
+                        default:
+                            if (DateTime.TryParse(searchParam, culture, styles, out searchDate))
+                            {
+                                docs = docManager.GetList(searchDate);
+                            }
+                            if (docs == null)
+                            {
+                                docs = docManager.GetAll().ToList();
+                            }
+                            break;
+                        case "/AddFile":
+                            if (DateTime.TryParse(searchParam, culture, styles, out searchDate))
+                            {
+                                docs = docManager.GetList(searchDate).Where(d => d.Author == user).ToList();
+                            }
+                            if (docs == null)
+                            {
+                                docs = docManager.GetAll().Where(d => d.Author == user).ToList();
+                            }
+                            break;
+                    }
+                    break;
             }
             return PartialView(docs);
         }

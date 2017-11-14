@@ -11,5 +11,7 @@ namespace Services.Managers
     {
         IDoc Get(string name);
         IList<IDoc> GetAll();
+        IList<IDoc> GetList(string name);
+        IList<IDoc> GetList(DateTime name);
     }
 }

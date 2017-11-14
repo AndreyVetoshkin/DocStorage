@@ -1,7 +1,9 @@
 ﻿<div>
     @using (Ajax.BeginForm("Search", new AjaxOptions { UpdateTargetId = "results" }))
     {
-        <input type="text" name="name" />
+        <input type="hidden" name="url" value="@HttpContext.Current.Request.Url" />
+        <input type="text" name="searchParam" />
+        @Html.DropDownList("searchOptions", new SelectList(new string[] { "По имени", "По дате"}))
         <input type="submit" value="Поиск" class="btn btn-default" />
     }
 </div>
